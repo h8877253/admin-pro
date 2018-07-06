@@ -170,8 +170,12 @@ export const getRouterData = app => {
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
+    // 自定义
     '/users/list': {
       component: dynamicWrapper(app, ['users/usersList'], () => import('../routes/users/List')),
+    },
+    '/sys/perms': {
+      component: dynamicWrapper(app, ['sys/sysPerms'], () => import('../routes/sys/perm/List')),
     },
   };
   

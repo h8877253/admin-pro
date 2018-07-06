@@ -1,6 +1,6 @@
 import mockjs from 'mockjs';
 import { getRule, postRule } from './mock/rule';
-import { getActivities, getNotice, getFakeList, getCheckUser } from './mock/api';
+import { getActivities, getNotice, getFakeList, getCheckUser, getUsersList } from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { getProfileBasicData } from './mock/profile';
 import { getProfileAdvancedData } from './mock/profile';
@@ -62,6 +62,7 @@ const proxy = {
   'GET /api/project/notice': getNotice,
   'GET /api/activities': getActivities,
   'GET /api/rule': getRule,
+  'GET /api/users/list': getUsersList,
   'POST /api/rule': {
     $params: {
       pageSize: {

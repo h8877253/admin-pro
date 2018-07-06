@@ -1,7 +1,7 @@
 const getMenu = [
     {
-      name: 'dashboard',
-      icon: 'dashboard',
+      name: '管理中心',
+      icon: 'home',
       path: 'dashboard',
       children: [
         {
@@ -160,6 +160,17 @@ const getMenu = [
         {
           name: '用户列表',
           path: 'list',
+        },
+      ],
+    },
+    {
+      name: '基础管理',
+      icon: 'setting',
+      path: 'sys',
+      children: [
+        {
+          name: '权限管理',
+          path: 'perms',
         },
       ],
     },
