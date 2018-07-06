@@ -152,6 +152,17 @@ const getMenu = [
         },
       ],
     },
+    {
+      name: '用户中心',
+      icon: 'user',
+      path: 'users',
+      children: [
+        {
+          name: '用户列表',
+          path: 'list',
+        },
+      ],
+    },
   ];
 export default {
   getMenu,

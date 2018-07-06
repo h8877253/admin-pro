@@ -170,6 +170,9 @@ export const getRouterData = app => {
     '/user/register-result': {
       component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
     },
+    '/users/list': {
+      component: dynamicWrapper(app, ['users/usersList'], () => import('../routes/users/List')),
+    },
   };
   
   const menuData = getFlatMenuData(getMenuData());
