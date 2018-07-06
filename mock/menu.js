@@ -153,6 +153,21 @@ const getMenu = [
       ],
     },
     {
+      name: '基础管理',
+      icon: 'setting',
+      path: 'sys',
+      children: [
+        {
+          name: '权限管理',
+          path: 'perms',
+        },
+        {
+          name: '角色管理',
+          path: 'roles',
+        },
+      ],
+    },
+    {
       name: '用户中心',
       icon: 'user',
       path: 'users',
@@ -164,13 +179,13 @@ const getMenu = [
       ],
     },
     {
-      name: '基础管理',
-      icon: 'setting',
-      path: 'sys',
+      name: '交易中心',
+      icon: 'pay-circle-o',
+      path: 'trade',
       children: [
         {
-          name: '权限管理',
-          path: 'perms',
+          name: '支付订单',
+          path: 'list',
         },
       ],
     },
