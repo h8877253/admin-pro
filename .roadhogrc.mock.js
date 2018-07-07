@@ -1,10 +1,11 @@
 import mockjs from 'mockjs';
 import { getRule, postRule } from './mock/rule';
-import { getActivities, getNotice, getFakeList, getCheckUser, getUsersList } from './mock/api';
+import { getActivities, getNotice, getFakeList, getCheckUser } from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { getProfileBasicData } from './mock/profile';
 import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
+import { getUsers } from './mock/users';
 import { getMenu } from './mock/menu';
 import { format, delay } from 'roadhog-api-doc';
 import qs from 'qs';
@@ -62,7 +63,6 @@ const proxy = {
   'GET /api/project/notice': getNotice,
   'GET /api/activities': getActivities,
   'GET /api/rule': getRule,
-  'GET /api/users/list': getUsersList,
   'POST /api/rule': {
     $params: {
       pageSize: {
@@ -154,6 +154,19 @@ const proxy = {
       message: 'Unauthorized',
       path: '/base/category/list',
     });
+  },
+  'GET /api/users/list': {
+    $params: {
+      pageSize: {
+        desc: '分页',
+        exp: 2,
+      },
+      current: {
+        desc: '分页',
+        exp: 2,
+      },
+    },
+    $body: getUsers,
   },
 };
 

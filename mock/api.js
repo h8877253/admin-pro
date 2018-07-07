@@ -63,82 +63,6 @@ const user = [
   '仲尼',
 ];
 
-let userList = [];
-for (let i = 0; i < 46; i += 1) {
-  userList.push(
-    Mock.mock({
-          id: '@id',
-          name: '@name',
-          nickName: '@last',
-          phone: /^1[34578]\d{9}$/,
-          'age|11-99': 1,
-          address: '@county(true)',
-          isMale: '@boolean',
-          email: '@email',
-          createTime: '@datetime',
-          avatar () {
-            return Mock.Random.image('100x100', Mock.Random.color(), '#757575', 'png', this.nickName.substr(0, 1))
-          },
-    })
-  )
-}
-
-export function getUsersList(req, res, u) {
-  let url = u;
-  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
-    url = req.url; // eslint-disable-line
-  }
-
-  const params = parse(url, true).query;
-
-  let dataSource = [...userList];
-
-  if (params.sorter) {
-    const s = params.sorter.split('_');
-    dataSource = dataSource.sort((prev, next) => {
-      if (s[1] === 'descend') {
-        return next[s[0]] - prev[s[0]];
-      }
-      return prev[s[0]] - next[s[0]];
-    });
-  }
-
-  if (params.status) {
-    const status = params.status.split(',');
-    let filterDataSource = [];
-    status.forEach(s => {
-      filterDataSource = filterDataSource.concat(
-        [...dataSource].filter(data => parseInt(data.status, 10) === parseInt(s[0], 10))
-      );
-    });
-    dataSource = filterDataSource;
-  }
-
-  if (params.no) {
-    dataSource = dataSource.filter(data => data.no.indexOf(params.no) > -1);
-  }
-
-  let pageSize = 10;
-  if (params.pageSize) {
-    pageSize = params.pageSize * 1;
-  }
-
-  const result = {
-    list: dataSource,
-    pagination: {
-      total: dataSource.length,
-      pageSize,
-      current: parseInt(params.currentPage, 10) || 1,
-    },
-  };
-
-  if (res && res.json) {
-    res.json(result);
-  } else {
-    return result;
-  }
-}
-
 export function fakeList(count) {
   const list = [];
   for (let i = 0; i < count; i += 1) {
@@ -392,5 +316,4 @@ export default {
   getActivities,
   getFakeList,
   getCheckUser,
-  getUsersList,
 };
