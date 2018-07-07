@@ -20,13 +20,15 @@ export default {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
-      if(response.status === 'error') {
+      if(response.success) {
+        yield put({
+          type: 'saveCurrentUser',
+          payload: response.data,
+        });
+      } else {
         yield put(routerRedux.push({pathname: '/user/login'}));
       }
-      yield put({
-        type: 'saveCurrentUser',
-        payload: response,
-      });
+      
     },
   },
 

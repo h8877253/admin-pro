@@ -1,8 +1,12 @@
-import fetch from 'dva/fetch';
+import axios from 'axios'
+import lodash from 'lodash'
+import pathToRegexp from 'path-to-regexp'
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import store from '../index';
 
+const service = axios.create({
+});
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -20,7 +24,8 @@ const codeMessage = {
   503: '服务不可用，服务器暂时过载或维护。',
   504: '网关超时。',
 };
-function checkStatus(response) {
+
+const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
@@ -35,50 +40,68 @@ function checkStatus(response) {
   throw error;
 }
 
+const fetch = (options) => {
+  let {
+    method = 'get',
+    data,
+    url
+  } = options
+  const cloneData = lodash.cloneDeep(data);
+  try {
+    let domin = ''
+    if (url.match(/[a-zA-z]+:\/\/[^/]*/)) {
+      [domin] = url.match(/[a-zA-z]+:\/\/[^/]*/)
+      url = url.slice(domin.length)
+    }
+    const match = pathToRegexp.parse(url)
+    url = pathToRegexp.compile(url)(data)
+    for (let item of match) {
+      if (item instanceof Object && item.name in cloneData) {
+        delete cloneData[item.name]
+      }
+    }
+    url = domin + url
+  } catch (e) {
+    console.log(e.message)
+  }
+  
+  switch (method.toLowerCase()) {
+    case 'get':
+      return service.get(url, {
+        params: cloneData,
+      })
+    case 'delete':
+      return service.delete(url, {
+        data: cloneData,
+      })
+    case 'post':
+      return service.post(url, cloneData)
+    case 'put':
+      return service.put(url, cloneData)
+    case 'patch':
+      return service.patch(url, cloneData)
+    default:
+      return service(options)
+  }
+}
+
 /**
  * Requests a URL, returning a promise.
  *
- * @param  {string} url       The URL we want to request
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url, options) {
-  const defaultOptions = {
-    credentials: 'include',
-  };
-  const newOptions = { ...defaultOptions, ...options };
-  if (
-    newOptions.method === 'POST' ||
-    newOptions.method === 'PUT' ||
-    newOptions.method === 'DELETE'
-  ) {
-    if (!(newOptions.body instanceof FormData)) {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        ...newOptions.headers,
-      };
-      newOptions.body = JSON.stringify(newOptions.body);
-    } else {
-      // newOptions.body is FormData
-      newOptions.headers = {
-        Accept: 'application/json',
-        ...newOptions.headers,
-      };
-    }
-  }
-
-  return fetch(url, newOptions)
-    .then(checkStatus)
-    .then(response => {
-      if (newOptions.method === 'DELETE' || response.status === 204) {
-        return response.text();
-      }
-      return response.json();
+export default function request(options) {
+  return fetch(options).then(checkStatus).then((response) => {
+    const { statusText, data } = response
+    return Promise.resolve({
+      success: true,
+      message: statusText,
+      data,
     })
-    .catch(e => {
-      const { dispatch } = store;
-      const status = e.name;
+  }).catch((error) => {
+    const { dispatch } = store;
+      const status = error.name;
       if (status === 401) {
         dispatch({
           type: 'login/logout',

@@ -18,7 +18,7 @@ export default {
       const response = yield call(query, payload);
       yield put({
         type: 'queryList',
-        payload: response,
+        payload: response.data,
       });
     },
   },

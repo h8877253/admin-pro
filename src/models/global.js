@@ -22,7 +22,7 @@ export default {
     },
     *fetchMenus(_, { call }) {
       const data = yield call(queryMenu);
-      localStorage.setItem('menus', JSON.stringify(data));
+      localStorage.setItem('menus', JSON.stringify(data.data));
     },
     *clearNotices({ payload }, { put, select }) {
       yield put({

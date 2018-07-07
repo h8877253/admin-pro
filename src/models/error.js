@@ -11,8 +11,7 @@ export default {
 
   effects: {
     *query({ payload }, { call, put }) {
-      yield call(query, payload.code);
-      // redirect on client when network broken
+      yield call(query, {code: payload.code});
       yield put(routerRedux.push(`/exception/${payload.code}`));
       yield put({
         type: 'trigger',
