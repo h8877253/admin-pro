@@ -20,7 +20,7 @@ export default {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
-      if(response.success) {
+      if(response.data.status === 'ok') {
         yield put({
           type: 'saveCurrentUser',
           payload: response.data,

@@ -1,6 +1,4 @@
 import { parse } from 'url';
-import qs from 'qs';
-import Mock from 'mockjs';
 
 const titles = [
   'Alipay',
@@ -291,29 +289,8 @@ export const getActivities = [
   },
 ];
 
-export function getCheckUser(req, res, u) {
-  let url = u;
-  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
-    url = req.url; // eslint-disable-line
-  }
-  const cookie = req.headers.cookie || ''
-  const cookies = qs.parse(cookie.replace(/\s/g, ''), { delimiter: ';' })
-  if (!cookies.token) {
-    res.json({status:'error',message:'没有登录'});
-    return
-  }
-  const now = new Date()
-      now.setDate(now.getDate() + 1)
-      res.cookie('token', JSON.stringify({ id: user[0].id, deadline: now.getTime() }), {
-        maxAge: 900000,
-        httpOnly: true,
-      })
-  return res.json({status:'ok'});
-}
-
 export default {
   getNotice,
   getActivities,
   getFakeList,
-  getCheckUser,
 };

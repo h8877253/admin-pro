@@ -1,11 +1,12 @@
 import mockjs from 'mockjs';
 import { getRule, postRule } from './mock/rule';
-import { getActivities, getNotice, getFakeList, getCheckUser } from './mock/api';
+import { getActivities, getNotice, getFakeList } from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { getProfileBasicData } from './mock/profile';
 import { getProfileAdvancedData } from './mock/profile';
 import { getNotices } from './mock/notices';
 import { getUsers } from './mock/users';
+import { postLogin, getCurrentUser } from './mock/user';
 import { getMenu } from './mock/menu';
 import { format, delay } from 'roadhog-api-doc';
 import qs from 'qs';
@@ -17,28 +18,9 @@ const noProxy = process.env.NO_PROXY === 'true';
 const proxy = {
   // 支持值为 Object 和 Array
   'GET /api/menu': getMenu,
-  'GET /api/currentUser': (req, res) => {
-    const cookie = req.headers.cookie || ''
-    const cookies = qs.parse(cookie.replace(/\s/g, ''), { delimiter: ';' })
-    if (!cookies.token) {
-      res.status(200).send({
-        status: 'ok',
-        name: 'Serati Ma',
-        avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-        userid: '00000001',
-        notifyCount: 12,
-      });
-      return
-    }
-    res.status(200).send({
-      status: 'ok',
-      name: 'Serati Ma',
-      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-      userid: '00000001',
-      notifyCount: 12,
-    });
+  'GET /api/currentUser': {
+    $body: getCurrentUser
   },
-  'GET api/current/user': getCheckUser,
   // GET POST 可省略
   'GET /api/users': [
     {
@@ -82,38 +64,13 @@ const proxy = {
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
   'GET /api/profile/advanced': getProfileAdvancedData,
-  'POST /api/login/account': (req, res) => {
-    const { password, userName, type } = req.body;
-    if (password === '888888' && userName === 'admin') {
-      res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'admin',
-        menu: getMenu,
-      });
-      return;
-    }
-    if (password === '123456' && userName === 'user') {
-      res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'user',
-        menu: getMenu,
-      });
-      return;
-    }
-    const now = new Date()
-    now.setDate(now.getDate() + 1)
-    res.cookie('token', JSON.stringify({ name: 'test', deadline: now.getTime() }), {
-      maxAge: 900000,
-      httpOnly: true,
-    })
-    res.send({
-      status: 'error',
-      type,
-      currentAuthority: 'guest',
-      menu: getMenu,
-    });
+  'POST /api/login/account': {
+    $params: {
+      password:{}, 
+      userName:{},
+      type:{}
+    },
+    $body: postLogin,
   },
   'POST /api/register': (req, res) => {
     res.send({ status: 'ok', currentAuthority: 'user' });
