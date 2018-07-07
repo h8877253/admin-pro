@@ -1,5 +1,5 @@
 import { routerRedux } from 'dva/router';
-import { query as queryUsers, queryCurrent } from '../services/user';
+import { query as queryUsers, queryCurrent } from 'services/user';
 
 
 export default {

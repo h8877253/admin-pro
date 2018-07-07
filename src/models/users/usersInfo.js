@@ -1,7 +1,7 @@
 import { query } from 'services/users/list';
 
 export default {
-  namespace: 'usersList',
+  namespace: 'usersInfo',
 
   state: {
     list: [],
