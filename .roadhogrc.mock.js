@@ -1,6 +1,7 @@
 import mockjs from 'mockjs';
 import { getRule, postRule } from './mock/rule';
 import { getActivities, getNotice, getFakeList } from './mock/api';
+import { getRole } from './mock/role';
 import { getFakeChartData } from './mock/chart';
 import { getProfileBasicData } from './mock/profile';
 import { getProfileAdvancedData } from './mock/profile';
@@ -124,6 +125,20 @@ const proxy = {
       },
     },
     $body: getUsers,
+  },
+  'GET /api/sys/roles': {
+    $desc: '角色列表',
+    $params: {
+      pageSize: {
+        desc: '分页',
+        exp: 2,
+      },
+      current: {
+        desc: '分页',
+        exp: 2,
+      },
+    },
+    $body: getRole,
   },
 };
 

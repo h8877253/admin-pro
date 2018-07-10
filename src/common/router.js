@@ -119,6 +119,9 @@ export const getRouterData = app => {
     '/sys/perms': {
       component: dynamicWrapper(app, ['sys/sysPerms'], () => import('../routes/sys/perm/List')),
     },
+    '/sys/roles': {
+      component: dynamicWrapper(app, ['sys/sysRoles'], () => import('../routes/sys/role/List')),
+    },
   };
   
   const menuData = getFlatMenuData(getMenuData());
